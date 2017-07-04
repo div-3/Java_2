@@ -1,17 +1,22 @@
 package lesson1.obstacles;
 
-import lesson1.competitors.Animal;
 import lesson1.competitors.Competitor;
 
 public class Water extends Obstacle {
-    int length;
+    private static String name = "Вода";
+    private final static int MAX_LENGTH = 200;
+
+    public static int getMAX() {
+        return MAX_LENGTH;
+    }
 
     public Water(int length) {
-        this.length = length;
+        super(name, length);
     }
 
     @Override
     public void doIt(Competitor competitor) {
-        competitor.swim(length);
+        competitor.swim(this.getLenghtOrHeight());
     }
+
 }

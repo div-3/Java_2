@@ -1,17 +1,21 @@
 package lesson1.obstacles;
 
-import lesson1.competitors.Animal;
 import lesson1.competitors.Competitor;
 
 public class Wall extends Obstacle {
-    int height;
+    private static String name = "Стена";
+    private final static int MAX_HEIGHT = 5;
+
+    public static int getMAX() {
+        return MAX_HEIGHT;
+    }
 
     public Wall(int height) {
-        this.height = height;
+        super(name, height);
     }
 
     @Override
     public void doIt(Competitor competitor) {
-        competitor.jump(height);
+        competitor.jump(this.getLenghtOrHeight());
     }
 }
