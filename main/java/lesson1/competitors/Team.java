@@ -3,7 +3,7 @@ package lesson1.competitors;
 public class Team {
     private String name;   // Название команды
     private final static int MAX_NUM_COMPETITORS = 4;   //Размер команды
-    private Competitor[] competitors = new Competitor[MAX_NUM_COMPETITORS];    //Члены команды
+    private Competitor[] competitors;// = new Competitor[MAX_NUM_COMPETITORS];    //Члены команды
 
     public Team(String _name ,Competitor[] _competitors){
         this.name = _name;

@@ -1,0 +1,393 @@
+/**
+ *Java. Level 2. Lesson 1.
+ *@author Ivan Dudorov
+ **/
+
+package lesson1;
+
+import lesson1.competitors.*;
+import lesson1.obstacles.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Competitor[] competitors = {new Human("Боб"), new Human("Василий"), new Cat("Барсик"), new Dog("Бобик")};
+        Team team = new Team("Друзья", competitors);
+        Course course = new Course("К2");
+        course.info();
+        team.info();
+        System.out.println();
+        course.doCourse(team);
+        team.winnerInfo();
+    }
+}
+
+
+
+
+package lesson1.competitors;
+
+public class Team {
+    private String name;   // Название команды
+    private final static int MAX_NUM_COMPETITORS = 4;   //Размер команды
+    private Competitor[] competitors = new Competitor[MAX_NUM_COMPETITORS];    //Члены команды
+
+    public Team(String _name ,Competitor[] _competitors){
+        this.name = _name;
+        for (int i = 0; i < _competitors.length && i < MAX_NUM_COMPETITORS; i++) {
+            this.competitors[i] = _competitors[i];
+        }
+    }
+
+    public Competitor[] getCompetitors() {
+        return competitors;
+    }
+
+    //Вывод информации о составе команды
+    public void info(){
+        System.out.println("\nТекущая команда: " + this.name);
+        for (Competitor c: this.competitors) {
+            c.info();
+        }
+    }
+
+    //Вывод информации о прошедших полосу препятствия членах команды
+    public void winnerInfo(){
+        System.out.println("\nПрошли полосу препятствий: ");
+        for (Competitor c: competitors) {
+            if(c.isOnDistance()) c.info();
+        }
+    }
+}
+
+
+
+
+
+package lesson1.competitors;
+
+public class Animal implements Competitor {
+    private String type;
+    private String name;
+
+    private int maxRunDistance;
+    private int maxJumpHeight;
+    private int maxSwimDistance;
+
+    private boolean onDistance;
+
+    //@Override
+    public boolean isOnDistance() {
+        return onDistance;
+    }
+
+    public Animal(String type, String name, int maxRunDistance, int maxJumpHeight, int maxSwimDistance) {
+        this.type = type;
+        this.name = name;
+        this.maxRunDistance = maxRunDistance;
+        this.maxJumpHeight = maxJumpHeight;
+        this.maxSwimDistance = maxSwimDistance;
+        this.onDistance = true;
+    }
+
+    //@Override
+    public void run(int dist) {
+        if (dist <= maxRunDistance) {
+            System.out.println(type + " " + name + " хорошо справился с кроссом");
+        } else {
+            System.out.println(type + " " + name + " не справился с кроссом");
+            onDistance = false;
+        }
+    }
+
+    //@Override
+    public void jump(int height) {
+        if (height <= maxJumpHeight) {
+            System.out.println(type + " " + name + " удачно перепрыгнул через стену");
+        } else {
+            System.out.println(type + " " + name + " не смог перепрыгнуть стену");
+            onDistance = false;
+        }
+    }
+
+    //@Override
+    public void swim(int dist) {
+        if (maxSwimDistance == 0) {
+            System.out.println(type + " " + name + " не умеет плавать");
+            onDistance = false;
+            return;
+        }
+        if (dist <= maxSwimDistance) {
+            System.out.println(type + " " + name + " отлично проплыл");
+        } else {
+            System.out.println(type + " " + name + " не смог проплыть");
+            onDistance = false;
+        }
+    }
+
+    //@Override
+    public void info() {
+        System.out.println(type + " " + name + " - " + onDistance);
+    }
+}
+
+
+
+
+
+package lesson1.competitors;
+
+public class Cat extends Animal {
+    public Cat(String name) {
+        super("Кот", name, 200, 20, 0);
+    }
+}
+
+
+
+
+
+package lesson1.competitors;
+
+public interface Competitor {
+    void run(int dist);
+    void swim(int dist);
+    void jump(int height);
+    boolean isOnDistance();
+    void info();
+}
+
+
+
+
+
+package lesson1.competitors;
+
+public class Dog extends Animal {
+    public Dog(String name) {
+        super("Пес", name, 500, 5, 20);
+    }
+}
+
+
+
+
+
+package lesson1.competitors;
+
+public class Human implements Competitor {
+    private String name;
+
+    private int maxRunDistance;
+    private int maxJumpHeight;
+    private int maxSwimDistance;
+
+    private boolean active;
+
+    //@Override
+    public boolean isOnDistance() {
+        return active;
+    }
+
+    public Human(String name) {
+        this.name = name;
+        this.maxRunDistance = 5000;
+        this.maxJumpHeight = 30;
+        this.maxSwimDistance = 200;
+        this.active = true;
+    }
+
+    //@Override
+    public void run(int dist) {
+        if (dist <= maxRunDistance) {
+            System.out.println(name + " хорошо справился с кроссом");
+        } else {
+            System.out.println(name + " не справился с кроссом");
+            active = false;
+        }
+    }
+
+    //@Override
+    public void jump(int height) {
+        if (height <= maxJumpHeight) {
+            System.out.println(name + " удачно перепрыгнул через стену");
+        } else {
+            System.out.println(name + " не смог перепрыгнуть стену");
+            active = false;
+        }
+    }
+
+    //@Override
+    public void swim(int dist) {
+        if (dist <= maxSwimDistance) {
+            System.out.println(name + " отлично проплыл");
+        } else {
+            System.out.println(name + " не смог проплыть");
+            active = false;
+        }
+    }
+
+    //@Override
+    public void info() {
+        System.out.println(name + " - " + active);
+    }
+}
+
+
+
+
+
+package lesson1.obstacles;
+
+import lesson1.competitors.Competitor;
+import lesson1.competitors.Team;
+import java.util.Random;
+
+public class Course {
+    private String name = "";
+    private final int NUM_OF_OBSTACLES = 4;
+    Obstacle[] obstacles = new Obstacle[NUM_OF_OBSTACLES];
+
+    public Course(String _name){
+        this.name = _name;
+
+        //Генератор текущей полосы препятствий
+        for (int i = 0; i < NUM_OF_OBSTACLES; i++) {
+            Random rnd = new Random();
+            int currentObstacle = rnd.nextInt(3);
+            switch (currentObstacle){
+                case 0: //Если сгенерировалась вода
+                    obstacles[i] = new Water(rnd.nextInt(Water.getMAX()));
+                    break;
+                case 1: //Если сгенерировалась стена
+                    obstacles[i] = new Wall(rnd.nextInt(Wall.getMAX()));
+                    break;
+                case 2: //Если сгенерировался бег
+                    obstacles[i] = new Cross(rnd.nextInt(Cross.getMAX()));
+                    break;
+            }
+        }
+    }
+
+    //Вывод информации о всей полосе препятствий
+    public void info(){
+        System.out.println("\nТекущая полоса препятствий: " + this.name);
+        for (Obstacle o: obstacles) {
+            o.info();
+        }
+    }
+
+    //Прохождение командой полосы препятствий
+    public void doCourse(Team team){
+        for (Competitor c: team.getCompetitors()) {
+            for (Obstacle o: obstacles) {
+                o.doIt(c);
+                if(!c.isOnDistance()) break;
+            }
+        }
+    }
+}
+
+
+
+
+package lesson1.obstacles;
+
+import lesson1.competitors.*;
+
+public abstract class Obstacle {
+    private String name;    //название препятствия
+    private int lenghtOrHeight;    //максимальное значение для препятствия
+
+
+
+    public Obstacle(String _name, int _lenghtOrHeight){
+        this.name = _name;
+        this.lenghtOrHeight = _lenghtOrHeight;
+    }
+
+    public abstract void doIt(Competitor competitor);
+
+    public void info() {
+        System.out.println(this.name + ' ' + this.lenghtOrHeight);
+    }
+
+    public int getLenghtOrHeight(){
+        return this.lenghtOrHeight;
+    }
+}
+
+
+
+
+package lesson1.obstacles;
+
+import lesson1.competitors.Competitor;
+
+public class Cross extends Obstacle {
+    private static String name = "Бег";
+    private final static int MAX_LENGTH = 500;
+
+    public static int getMAX() {
+        return MAX_LENGTH;
+    }
+
+    public Cross(int length) {
+        super(name, length);
+    }
+
+    @Override
+    public void doIt(Competitor competitor) {
+        competitor.run(this.getLenghtOrHeight());
+    }
+}
+
+
+
+
+package lesson1.obstacles;
+
+import lesson1.competitors.Competitor;
+
+public class Wall extends Obstacle {
+    private static String name = "Стена";
+    private final static int MAX_HEIGHT = 5;
+
+    public static int getMAX() {
+        return MAX_HEIGHT;
+    }
+
+    public Wall(int height) {
+        super(name, height);
+    }
+
+    @Override
+    public void doIt(Competitor competitor) {
+        competitor.jump(this.getLenghtOrHeight());
+    }
+}
+
+
+
+
+package lesson1.obstacles;
+
+import lesson1.competitors.Competitor;
+
+public class Water extends Obstacle {
+    private static String name = "Вода";
+    private final static int MAX_LENGTH = 200;
+
+    public static int getMAX() {
+        return MAX_LENGTH;
+    }
+
+    public Water(int length) {
+        super(name, length);
+    }
+
+    @Override
+    public void doIt(Competitor competitor) {
+        competitor.swim(this.getLenghtOrHeight());
+    }
+
+}
