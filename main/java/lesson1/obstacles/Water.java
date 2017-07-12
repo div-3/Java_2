@@ -3,15 +3,15 @@ package lesson1.obstacles;
 import lesson1.competitors.Competitor;
 
 public class Water extends Obstacle {
-    private static String name = "Вода";
     private final static int MAX_LENGTH = 200;
-
-    public static int getMAX() {
-        return MAX_LENGTH;
-    }
+    private static String name = "Вода";
 
     public Water(int length) {
         super(name, length);
+    }
+
+    public static int getMAX() {
+        return MAX_LENGTH;
     }
 
     @Override
