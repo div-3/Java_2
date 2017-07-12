@@ -1,7 +1,5 @@
 package Lesson3;
 
-import java.util.Arrays;
-
 /**
  * Java. Level 2. Lesson 3.
  *
@@ -23,12 +21,34 @@ import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
+        //Задание 1
+        System.out.println("\nЗадание 1!");
         WordsArray wa = new WordsArray("Земля", "Земля", "Луна", "Луна", "Венера", "Марс", "Меркурий", "Плутон");
         System.out.println("Исходный массив слов: " + wa.getWordsArray());
         System.out.print("Массив уникальных записей:");
         wa.showUniqueWords();
         System.out.println("В исходном массиве:");
         wa.showNumberOfWordInstance();
+
+
+        //Задание 2
+        System.out.println("\nЗадание 2!");
+        PhoneBook phoneBook = new PhoneBook();
+        phoneBook.showPhoneBook();
+        phoneBook.add("Иванов", "+79246014850");
+        phoneBook.add("Иванов", "");
+        phoneBook.add("", "5522");
+        phoneBook.showPhoneBook();
+        phoneBook.add("Петров", "650025");
+        phoneBook.showPhoneBook();
+        phoneBook.add("Сидоров", "524895");
+        phoneBook.add("Иванов", "524895");
+        phoneBook.showPhoneBook();
+        System.out.println("\nРабота метода \"get\":");
+        System.out.println(phoneBook.get("Иванов"));
+        System.out.println(phoneBook.get("Петров"));
+        System.out.println(phoneBook.get("Сусанин"));
+        System.out.println(phoneBook.get(""));
     }
 
 

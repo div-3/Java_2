@@ -1,0 +1,169 @@
+package Lesson3;
+
+/**
+ * Java. Level 2. Lesson 3.
+ *
+ * @author Ivan Dudorov
+ *
+ Задание:
+ 1. Создать массив с набором слов (10-20 слов, должны встречаться повторяющиеся). Найти и вывести список уникальных
+ слов, из которых состоит массив (дубликаты не считаем). Посчитать сколько раз встречается каждое слово.
+
+ 2. Написать простой класс ТелефонныйСправочник, который хранит в себе список фамилий и телефонных номеров.
+ В этот телефонный справочник с помощью метода add() можно добавлять записи. С помощью метода get() искать номер
+ телефона по фамилии. Следует учесть, что под одной фамилией может быть несколько телефонов (в случае однофамильцев),
+ тогда при запросе такой фамилии должны выводиться все телефоны.
+
+ Желательно как можно меньше добавлять своего, чего нет в задании (т.е. не надо в телефонную запись добавлять
+ еще дополнительные поля (имя, отчество, адрес), делать взаимодействие с пользователем через консоль и т.д.).
+ Консоль желательно не использовать (в том числе Scanner), тестировать просто из метода main() прописывая add() и get().
+ */
+
+public class Main {
+    public static void main(String[] args) {
+        //Задание 1
+        System.out.println("\nЗадание 1!");
+        WordsArray wa = new WordsArray("Земля", "Земля", "Луна", "Луна", "Венера", "Марс", "Меркурий", "Плутон");
+        System.out.println("Исходный массив слов: " + wa.getWordsArray());
+        System.out.print("Массив уникальных записей:");
+        wa.showUniqueWords();
+        System.out.println("В исходном массиве:");
+        wa.showNumberOfWordInstance();
+
+
+        //Задание 2
+        System.out.println("\nЗадание 2!");
+        PhoneBook phoneBook = new PhoneBook();
+        phoneBook.showPhoneBook();
+        phoneBook.add("Иванов", "+79246014850");
+        phoneBook.add("Иванов", "");
+        phoneBook.add("", "5522");
+        phoneBook.showPhoneBook();
+        phoneBook.add("Петров", "650025");
+        phoneBook.showPhoneBook();
+        phoneBook.add("Сидоров", "524895");
+        phoneBook.add("Иванов", "524895");
+        phoneBook.showPhoneBook();
+        System.out.println("\nРабота метода \"get\":");
+        System.out.println(phoneBook.get("Иванов"));
+        System.out.println(phoneBook.get("Петров"));
+        System.out.println(phoneBook.get("Сусанин"));
+        System.out.println(phoneBook.get(""));
+    }
+}
+
+
+package Lesson3;
+
+import java.util.*;
+/*1. Создать массив с набором слов (10-20 слов, должны встречаться повторяющиеся). Найти и вывести список уникальных
+ слов, из которых состоит массив (дубликаты не считаем). Посчитать сколько раз встречается каждое слово.
+ */
+public class WordsArray {
+    private ArrayList<String> wordsArray = new ArrayList<String>();
+    private int lengthWordsArray;
+
+    public WordsArray(String... _wordsArray) {
+        if (_wordsArray.length == 0) System.exit(1);
+        for (String str: _wordsArray) {
+            wordsArray.add(str);
+        }
+        this.lengthWordsArray = wordsArray.size();
+    }
+
+    public ArrayList<String> getWordsArray() {
+        return wordsArray;
+    }
+
+    //Функция для вывода всех уникальных слов в массиве объекта
+    public void showUniqueWords() {
+        System.out.println(getUniqueWords());
+    }
+
+    //Функция для вывода сколько раз встречается каждое слово
+    public void showNumberOfWordInstance(){
+        HashMap<String, Integer> hm = this.getNumberOfWordInstance();
+        Set<Map.Entry<String, Integer>> set = hm.entrySet();
+        for (Map.Entry<String, Integer> o: set) {
+            System.out.println("Слово \"" + o.getKey() + "\" встречается " + o.getValue() + " раз;");
+        }
+    }
+
+    //Функция для отбора всех уникальных слов в массиве объекта.
+    //Отбираем путём создания HashSet на основе исходных данных
+    public HashSet<String> getUniqueWords() {
+        HashSet<String> uniqueWords = new HashSet<>(this.wordsArray);
+        return uniqueWords;
+    }
+
+    //Функция для подсчёта сколько раз встречается каждое слово.
+    //Подсчитываем путём создания HashMap, где ключами являются уникальные слова, а значениями - количество повторов.
+    public HashMap<String, Integer>  getNumberOfWordInstance(){
+        HashMap<String, Integer> numberOfWordsInstances = new HashMap<>();
+        for (String strUnique: this.getUniqueWords()) {
+            int i = 0;                              //Счётчик повторов слов
+            for (String strAll: this.wordsArray) {
+                if (strUnique.equals(strAll)) i++;
+            }
+            numberOfWordsInstances.put(strUnique,i);
+        }
+        return numberOfWordsInstances;
+    }
+}
+
+
+
+
+
+
+package Lesson3;
+
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ *  2. Написать простой класс ТелефонныйСправочник, который хранит в себе список фамилий и телефонных номеров.
+ В этот телефонный справочник с помощью метода add() можно добавлять записи. С помощью метода get() искать номер
+ телефона по фамилии. Следует учесть, что под одной фамилией может быть несколько телефонов (в случае однофамильцев),
+ тогда при запросе такой фамилии должны выводиться все телефоны.
+ */
+public class PhoneBook {
+    HashMap<String, LinkedList<String>> phoneBook = new HashMap<>();
+
+    //Получение списка телефонов по указанному имени
+    public LinkedList<String> get(String _name){
+        LinkedList<String> phones = new LinkedList<>();
+        if (_name == null || _name == "") return phones;
+
+        //Получаем список телефонов для данного абонента
+        if(this.phoneBook.containsKey(_name)) {
+            phones = this.phoneBook.get(_name);
+        }
+        return phones;
+    }
+
+    //Функция для добавления новой записи в телефонную книгу
+    public void add(String _name, String _phone){
+        if (_name == null || _name == "" || _phone == null || _phone == "") return;
+
+        LinkedList<String> phones;
+        phones = this.get(_name);            //Получаем список телефонов для данного абонента
+        phones.addLast(_phone);     //Добавляем к списку телефонов абонента новый телефон
+        this.phoneBook.put(_name, phones);  //Обновляем запись в телефонной книге
+    }
+
+    //Вывод всей телефонной книги
+    public void showPhoneBook(){
+        HashMap<String, LinkedList<String>> hm = this.phoneBook;
+        Set<Map.Entry<String, LinkedList<String>>> set = hm.entrySet();
+        System.out.println("ТЕЛЕФОННАЯ КНИГА");
+        System.out.println("_________________________________________________________");
+        System.out.println("|   Имя         |                 Телефон                |");
+        for (Map.Entry<String, LinkedList<String>> o: set) {
+            System.out.println("| " + o.getKey() + " | " + o.getValue() + ";");
+        }
+        System.out.println("_________________________________________________________");
+    }
+}
