@@ -2,21 +2,22 @@ package lesson1.obstacles;
 
 import lesson1.competitors.Competitor;
 import lesson1.competitors.Team;
+
 import java.util.Random;
 
 public class Course {
-    private String name = "";
     private final int NUM_OF_OBSTACLES = 4;
     Obstacle[] obstacles = new Obstacle[NUM_OF_OBSTACLES];
+    private String name = "";
 
-    public Course(String _name){
+    public Course(String _name) {
         this.name = _name;
 
         //Генератор текущей полосы препятствий
         for (int i = 0; i < NUM_OF_OBSTACLES; i++) {
             Random rnd = new Random();
             int currentObstacle = rnd.nextInt(3);
-            switch (currentObstacle){
+            switch (currentObstacle) {
                 case 0: //Если сгенерировалась вода
                     obstacles[i] = new Water(rnd.nextInt(Water.getMAX()));
                     break;
@@ -31,19 +32,19 @@ public class Course {
     }
 
     //Вывод информации о всей полосе препятствий
-    public void info(){
+    public void info() {
         System.out.println("\nТекущая полоса препятствий: " + this.name);
-        for (Obstacle o: obstacles) {
+        for (Obstacle o : obstacles) {
             o.info();
         }
     }
 
     //Прохождение командой полосы препятствий
-    public void doCourse(Team team){
-        for (Competitor c: team.getCompetitors()) {
-            for (Obstacle o: obstacles) {
+    public void doCourse(Team team) {
+        for (Competitor c : team.getCompetitors()) {
+            for (Obstacle o : obstacles) {
                 o.doIt(c);
-                if(!c.isOnDistance()) break;
+                if (!c.isOnDistance()) break;
             }
         }
     }

@@ -1,6 +1,7 @@
 /**
- *Java. Level 2. Lesson 1.
- *@author Ivan Dudorov
+ * Java. Level 2. Lesson 1.
+ *
+ * @author Ivan Dudorov
  **/
 
 package lesson1;

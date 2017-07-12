@@ -7,8 +7,7 @@ public abstract class Obstacle {
     private int lenghtOrHeight;    //максимальное значение для препятствия
 
 
-
-    public Obstacle(String _name, int _lenghtOrHeight){
+    public Obstacle(String _name, int _lenghtOrHeight) {
         this.name = _name;
         this.lenghtOrHeight = _lenghtOrHeight;
     }
@@ -19,7 +18,7 @@ public abstract class Obstacle {
         System.out.println(this.name + ' ' + this.lenghtOrHeight);
     }
 
-    public int getLenghtOrHeight(){
+    public int getLenghtOrHeight() {
         return this.lenghtOrHeight;
     }
 }
